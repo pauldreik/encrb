@@ -1,0 +1,49 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" (C) Copyright 2016 Paul Dreik <github@pauldreik.se>,
+.\"
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH ENCRB 1 "March 12, 2016"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+encrb \- encrypted remote backups
+.SH SYNOPSIS
+.B encrb 
+.RI [ options ] " SRC HOST:DEST"
+.SH DESCRIPTION
+.B encrb
+is a tool which backs up plaintext local directories to remote
+machine as encrypted. It does so by first using encfs \-\-reverse
+followed by rsync.
+.SH OPTIONS
+.TP
+.B \-h, \-\-help
+Show summary of options.
+.TP
+.B \-k KEYFILE, \-\-keyfile=KEYFILE
+encfs key file, default is ~/.encfs6-encrb.xml
+.TP
+.B \-p PASSFILE, \-\-passfile=PASSFILE
+file containing encfs keyfile password, default is ~/.encfs-password
+.TP
+.B \-b BWLIMIT, \-\-bwlimit=BWLIMIT
+Bandwidth limit (KiB/s) for rsync, default is 0 which means no limit.
+.SH EXIT VALUES
+0 on success, nonzero if rsync and/or encfs fails.
+.SH SEE ALSO
+.BR encfs (1),
+.BR rsync (1).
+.SH AUTHOR
+Heikki Hokkanen. This man page was written by Paul Dreik.

@@ -1,0 +1,15 @@
+Source: encrb
+Section: unknown
+Priority: optional
+Maintainer: Paul Dreik <github@dreik.se>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.5
+Homepage: https://github.com/hoxu/encrb
+
+
+Package: encrb
+Architecture: all
+Depends: ${misc:Depends}, rsync, encfs(>=1.7.4), python
+Description: encrypted remote backups using encfs reverse and rsync
+ encrb backs up plaintext local directories to remote machine as encrypted,
+ using encfs --reverse and rsync.
