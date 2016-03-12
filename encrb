@@ -18,6 +18,9 @@ def path_to_string(path):
 	return path.strip('/').replace('/', '-')
 
 class Encrb:
+        def umountTmpDir(self, tmpdir):
+                subprocess.call(['fusermount', '-u', tmpdir])
+                os.rmdir(tmpdir)
 	def backup_path(self, path):
 		print 'Backing up:', path
 		friendlyname = path_to_string(path)
@@ -34,21 +37,22 @@ class Encrb:
 				destination = os.path.join(self.destination, friendlyname)
 				print 'Rsyncing encrypted "%s" to "%s"...' % (path, destination)
 				sys.stdout.flush()
-				subprocess.call(['rsync', '-avz', '--delete-delay', '--bwlimit', str(self.options.bwlimit), tmpdir + '/', destination])
+				subprocess.check_call(['rsync', '-avz', '--delete-delay', '--bwlimit', str(self.options.bwlimit), tmpdir + '/', destination])
+                        except subprocess.CalledProcessError, c:
+                                # rsync failed somehow - cleanup and exit.
+                                self.umountTmpDir(tmpdir)
+                                raise c
 			except KeyboardInterrupt, e:
 				print 'KeyboardInterrupt, sleeping 1 sec, then unmounting'
 				time.sleep(1)
-				subprocess.call(['fusermount', '-u', tmpdir])
-				os.rmdir(tmpdir)
-				raise e
+                                self.umountTmpDir(tmpdir)
+                                raise e
 		else:
 			print 'encfs returned error', err
 
 		# Unmount
 		print 'Unmounting encfs reverse mount...'
-		subprocess.call(['fusermount', '-u', tmpdir])
-
-		os.rmdir(tmpdir)
+		self.umountTmpDir(tmpdir)
 
 	def get_modified_env(self):
 		env = dict(os.environ)
